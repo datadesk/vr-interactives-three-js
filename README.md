@@ -56,7 +56,7 @@ Now, we need to add a couple of helpers that allow VR-style stereo effects to ou
 ```
 
 ## Prepping the DEM data
-![alt text](http://www.trbimg.com/img-562bfe79/turbine/la-mars-dem-map-20151024/1024 "Digital elevation model of Gale Crater. Brighter values are higher elevations. (NASA)")
+![alt text](http://www.trbimg.com/img-562bfe79/turbine/la-mars-dem-map-20151024/600 "Digital elevation model of Gale Crater. Brighter values are higher elevations. (NASA)")
 
 A digital elevation model is a 3D representation of a terrain's surface, and in this case is a greyscale heightmap, where lighter colors represent higher elevations. 
 
