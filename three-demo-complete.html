@@ -9,6 +9,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <style>
+    html, body {margin:0; padding:0;}
+    </style>
 </head>
 <body>
     <!-- Our scene will go here -->
@@ -24,6 +27,31 @@
     <script src="js/VREffect.js"></script>
 
     <script>
+    // Constants
+    var WINDOW_WIDTH = window.innerWidth,
+        WINDOW_HEIGHT = window.innerHeight,
+        WORLD_WIDTH = 2000,
+        WORLD_HEIGHT = 1900;
+
+    // Create the "scene" and camera
+    var container = document.getElementById("webgl"),   // containing element
+        scene = new THREE.Scene(),
+        camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
+
+    // Create and append the renderer
+    var renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0xffd4a6);
+    renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    container.appendChild( renderer.domElement );
+
+    // Apply VR stereo rendering to renderer
+    var effect = new THREE.VREffect(renderer);
+    effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    // Create a VR manager helper to enter and exit VR mode
+    var manager = new WebVRManager(renderer, effect);
+
 
     </script>
 
