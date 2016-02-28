@@ -165,6 +165,18 @@ Now load the scene. There will be a wait while the resources load and process, b
 
 ![Our scene](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/oops.png?raw=true)
 
+What happened? We forgot to turn on the lights!
+
+```javascript
+// Lights!
+var dirLight = new THREE.DirectionalLight( 0xffffff, 0.75);
+dirLight.position.set( -1, 1, 1).normalize();
+
+var ambiLight = new THREE.AmbientLight(0x999999);
+
+scene.add(ambiLight);
+scene.add(dirLight);
+```
 
 
 ## Other Things you may want to do
