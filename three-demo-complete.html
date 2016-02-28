@@ -38,6 +38,10 @@
         scene = new THREE.Scene(),
         camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
 
+    camera.position.set(0, -199, 75);
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.lookAt(scene.position);
+
     // Create and append the renderer
     var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -52,6 +56,61 @@
     // Create a VR manager helper to enter and exit VR mode
     var manager = new WebVRManager(renderer, effect);
 
+    // Set the URL for the terrain data and initialize the loader
+    var terrainURL = "data/Gale_HRSC_DEM_50m_300x285.bin";
+    var terrainLoader = new THREE.TerrainLoader();
+    var surface;
+
+    // The terrainLoader loads the DEM file and defines a function to be called when the file is successfully downloaded.
+    terrainLoader.load(terrainURL, function(data){
+        // Create the plane geometry
+        var geometry = new THREE.PlaneGeometry(WORLD_WIDTH, WORLD_HEIGHT, 299, 284);
+
+        // Adjust each vertex in the plane to correspond to the height value in the DEM file.
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+            geometry.vertices[i].z = data[i] / 65535 * 100;
+        }
+
+        var textureLoader = new THREE.TextureLoader()
+        var textureURL = "data/Gale_texture_high_4096px.jpg";
+
+        textureLoader.load(textureURL, function(texture) {
+            var material = new THREE.MeshLambertMaterial({
+                color: 0xffffff,
+                map: texture
+            });
+
+            surface = new THREE.Mesh(geometry, material);
+            scene.add(surface);
+        });
+
+
+    });
+
+
+
+
+
+
+    // // Lights!
+    // var dirLight = new THREE.DirectionalLight( 0xffffff, 0.75);
+    // dirLight.position.set( -1, 1, 1).normalize();
+
+    // var ambiLight = new THREE.AmbientLight(0x999999);
+
+    // scene.add(ambiLight);
+    // scene.add(dirLight);
+
+
+
+    // Render loop
+    function render() {
+        // Render the scene through the manager.
+        requestAnimationFrame( render );
+        manager.render(scene, camera);
+    }
+
+    render();
 
     </script>
 

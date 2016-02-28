@@ -354,7 +354,7 @@ CardboardDistorter.prototype.updateDeviceInfo = function(deviceInfo) {
   // Set distortion coefficients.
   var coefficients = deviceInfo.viewer.distortionCoefficients;
   uniforms.distortion.value.set(coefficients[0], coefficients[1]);
-
+      
 
   // For viewer profile debugging, show the lens center.
   if (WebVRConfig.SHOW_EYE_CENTERS) {
@@ -572,7 +572,7 @@ DeviceInfo.prototype.getProjectionMatrixLeftEye = function(opt_isUndistorted) {
 
   // makeFrustum expects units in tan-angle space.
   projectionMatrix.makeFrustum(-left, right, -bottom, top, near, far);
-
+  
   return projectionMatrix;
 };
 
@@ -675,7 +675,7 @@ module.exports = DeviceInfo;
 var BarrelDistortionFragment = {
   type: 'fragment_v2',
 
-
+  
   uniforms: {
     texture:   { type: 't', value: null },
     distortion: { type: 'v2', value: new THREE.Vector2(0.441, 0.156) },
