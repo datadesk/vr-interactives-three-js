@@ -165,7 +165,7 @@ Now load the scene. There will be a wait while the resources load and process, b
 
 ![Our scene](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/oops.png?raw=true)
 
-What happened? We forgot to turn on the lights!
+What happened? We forgot to turn on the lights! Let's do that.
 
 ```javascript
 // Lights!
@@ -177,6 +177,12 @@ var ambiLight = new THREE.AmbientLight(0x999999);
 scene.add(ambiLight);
 scene.add(dirLight);
 ```
+
+Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
+
+
+
+
 
 
 ## Other Things you may want to do
