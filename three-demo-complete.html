@@ -89,19 +89,17 @@
 
 
 
+    // Lights!
+    var dirLight = new THREE.DirectionalLight( 0xffffff, 0.75);
+    dirLight.position.set( -1, 1, 1).normalize();
 
+    var ambiLight = new THREE.AmbientLight(0x999999);
 
+    scene.add(ambiLight);
+    scene.add(dirLight);
 
-    // // Lights!
-    // var dirLight = new THREE.DirectionalLight( 0xffffff, 0.75);
-    // dirLight.position.set( -1, 1, 1).normalize();
-
-    // var ambiLight = new THREE.AmbientLight(0x999999);
-
-    // scene.add(ambiLight);
-    // scene.add(dirLight);
-
-
+    var controls = new THREE.FlyControls(camera);
+    controls.autoForward = false;
 
     // Render loop
     function render() {

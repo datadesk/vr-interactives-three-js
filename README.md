@@ -149,7 +149,6 @@ It's important to place these in the callbacks, otherwise you might be trying to
 So we have a scene, a camera and objects in that scene. Let's render it! We do this by creating a rendering loop. Right now, since we don't have controls defined yet, this is very simple.
 
 ```javascript
-
 // Render loop
 function render() {
     // Render the scene through the manager.
@@ -158,7 +157,6 @@ function render() {
 }
 
 render();
-
 ```
 
 Now load the scene. There will be a wait while the resources load and process, but eventually you'll see this lovely scene.
@@ -178,10 +176,15 @@ scene.add(ambiLight);
 scene.add(dirLight);
 ```
 
+That's better, right?
+
 Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
 
-
+```javascript
+var controls = new THREE.FlyControls(camera);
+controls.autoForward = false;
+```
 
 
 
