@@ -10,7 +10,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <style>
-    html, body {margin:0; padding:0;}
+    *, *:before, *:after {
+      -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    }
+    html, body { margin:0; padding:0; overflow:hidden;}
+
     </style>
 </head>
 <body>
@@ -36,6 +40,7 @@
     // Create the "scene" and camera
     var container = document.getElementById("webgl"),   // containing element
         scene = new THREE.Scene(),
+        clock = new THREE.Clock(),
         camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
 
     camera.position.set(0, -199, 75);
@@ -71,7 +76,7 @@
             geometry.vertices[i].z = data[i] / 65535 * 100;
         }
 
-        var textureLoader = new THREE.TextureLoader()
+        var textureLoader = new THREE.TextureLoader();
         var textureURL = "data/Gale_texture_high_4096px.jpg";
 
         textureLoader.load(textureURL, function(texture) {
@@ -87,8 +92,6 @@
 
     });
 
-
-
     // Lights!
     var dirLight = new THREE.DirectionalLight( 0xffffff, 0.75);
     dirLight.position.set( -1, 1, 1).normalize();
@@ -98,11 +101,22 @@
     scene.add(ambiLight);
     scene.add(dirLight);
 
-    var controls = new THREE.FlyControls(camera);
-    controls.autoForward = false;
+    var is_mobile= /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (is_mobile) {
+        var controls = new THREE.VRControls(camera);
+    } else {
+        var controls = new THREE.FlyControls(camera);
+        controls.autoForward = false;
+        controls.dragToLook = true;
+        controls.movementSpeed = 20;
+        controls.rollSpeed = Math.PI / 12;
+    }
 
     // Render loop
     function render() {
+        var delta = clock.getDelta();
+        controls.update(delta);
         // Render the scene through the manager.
         requestAnimationFrame( render );
         manager.render(scene, camera);

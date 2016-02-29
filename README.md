@@ -27,12 +27,13 @@ Then, we're ready to create the scene and place the camera:
 ```javascript
 var container = document.getElementById("webgl"),
     scene = new THREE.Scene(),
+    clock = new THREE.Clock(),
     camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
 ```
 
 The [Perspective Camera](http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera) functions similar to a standard photo or video camera you might be familiar with. The first parameter, `75` is the field of view, followed by the aspect ratio (in this case the width and height of the window), along with the minimum and maximum ranges the camera can "see." Anything outside these ranges will not be rendered in the scene.
 
-We also want to position the camera, and tell it where to look.
+We also want to position the camera, and tell it where to look. These settings position the camera slightly above the scene, looking at the mound in the center of the crater. 
 
 ```javascript
 camera.position.set(0, -199, 75);
@@ -151,6 +152,8 @@ So we have a scene, a camera and objects in that scene. Let's render it! We do t
 ```javascript
 // Render loop
 function render() {
+    // We'll add more up here later
+
     // Render the scene through the manager.
     requestAnimationFrame( render );
     manager.render(scene, camera);
@@ -180,13 +183,47 @@ That's better, right?
 
 Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
+Standing still in a scene isn't very fun - we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters are specific to this type of controls, 
 
 ```javascript
 var controls = new THREE.FlyControls(camera);
 controls.autoForward = false;
+controls.dragToLook = true;
+controls.movementSpeed = 20;
+controls.rollSpeed = Math.PI / 12;
 ```
 
+Reload the page and... nothing happened! To actually move around in the scene, we also need to add the controls to the renderer loop. 
 
+```javascript
+    // Render loop
+    function render() {
+        var delta = clock.getDelta();
+        controls.update(delta);
+        // Render the scene through the manager.
+        requestAnimationFrame( render );
+        manager.render(scene, camera);
+    }
+```
+
+Now you can reload the scene by clicking and dragging with the mouse, or using the WASD keys to move around. 
+
+That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on. 
+
+```javascript 
+var is_mobile= /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+if (is_mobile) {
+    var controls = new THREE.VRControls(camera);
+} else {
+    var controls = new THREE.FlyControls(camera);
+    controls.autoForward = false;
+    controls.dragToLook = true;
+    controls.movementSpeed = 20;
+    controls.rollSpeed = Math.PI / 12;
+}
+
+```
 
 ## Other Things you may want to do
 - Load in different surface detail and texture sizes based on the device.
