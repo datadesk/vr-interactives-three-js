@@ -116,7 +116,7 @@ Let's do this next.
 Inside of the callback function, the line I said we'd be coming back to, we want to define a texture loader and set the URL, much in the way that we loaded the DEM data.
 
 ```javascript
-    var textureLoader = new THREE.TextureLoader()
+    var textureLoader = new THREE.TextureLoader();
     var textureURL = "data/Gale_texture_high_4096px.jpg";
 ```
 
