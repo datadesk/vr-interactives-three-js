@@ -72,24 +72,22 @@
         var geometry = new THREE.PlaneGeometry(WORLD_WIDTH, WORLD_HEIGHT, 299, 284);
 
         // Adjust each vertex in the plane to correspond to the height value in the DEM file.
-        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-            geometry.vertices[i].z = data[i] / 65535 * 100;
-        }
+        // for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+        //     geometry.vertices[i].z = data[i] / 65535 * 100;
+        // }
 
         var textureLoader = new THREE.TextureLoader();
         var textureURL = "data/Gale_texture_high_4096px.jpg";
 
         textureLoader.load(textureURL, function(texture) {
             var material = new THREE.MeshLambertMaterial({
-                color: 0xffffff,
-                map: texture
+                // map: texture,
+                wireframe: true
             });
 
             surface = new THREE.Mesh(geometry, material);
             scene.add(surface);
         });
-
-
     });
 
     // Lights!

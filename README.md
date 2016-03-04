@@ -125,7 +125,6 @@ Then we load the texture similar to how we did the DEM file. This time, we defin
 ```javascript
     textureLoader.load(textureURL, function(texture) {
         var material = new THREE.MeshLambertMaterial({
-            color: 0xffffff,
             map: texture
         });
 
