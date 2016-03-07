@@ -19,43 +19,65 @@ $ python -m SimpleHTTPServer
 ## Let's get started
 Using Three.js can be compared a bit to filmmaking: you have a scene, lighting and a camera. The scene updates a certain number of times per second, otherwise known as "frames per second" (which we'll try to keep as close to 60 as we can, but will drop based on your computer and the complexity of the scene.)
 
-We'll build this in the file [three-demo.html](three-demo.html).
+We'll build this in the file [three-demo.html](three-demo.html). Go ahead and open this file in a text editor.
 
 In the empty script tag on line 27, let's start by declaring some constants. We'll use this to set the size of the renderer on the screen, and the "size" of our world.
 
 ```javascript
-var WINDOW_WIDTH = window.innerWidth,
-    WINDOW_HEIGHT = window.innerHeight,
-    WORLD_WIDTH = 2000,
-    WORLD_HEIGHT = 1900;
+// Width and height of the browser window
+var WINDOW_WIDTH = window.innerWidth;
+var WINDOW_HEIGHT = window.innerHeight;
+
+// Width and height of the surface we're going to create
+var WORLD_WIDTH = 2000;
+var WORLD_HEIGHT = 1900;
 ```
 
 Then, we're ready to create the scene and place the camera:
 
 ```javascript
-var container = document.getElementById("webgl"),
-    scene = new THREE.Scene(),
-    clock = new THREE.Clock(),
-    camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
+// Where the scene will go
+var container = document.getElementById("webgl");
+
+// Where our lights and cameras will go
+var scene = new THREE.Scene();
+
+// Keeps track of time
+var clock = new THREE.Clock();
+
+// How we will see the scene
+var camera = new THREE.PerspectiveCamera(75, WINDOW_WIDTH / WINDOW_HEIGHT, 1, 5000);
 ```
 
-The [Perspective Camera](http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera) functions similar to a standard photo or video camera you might be familiar with. The first parameter, `75` is the field of view, followed by the aspect ratio (in this case the width and height of the window), along with the minimum and maximum ranges the camera can "see." Anything outside these ranges will not be rendered in the scene.
+The [PerspectiveCamera(fieldOfView, aspect, near, far)](http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera) functions similar to a standard photo or video camera you might be familiar with. The first parameter, `75` is the field of view in degrees, followed by the aspect ratio (in this case the width and height of the window), along with the minimum and maximum ranges the camera can "see." Anything outside these ranges will not be rendered in the scene.
 
 We also want to position the camera, and tell it where to look. These settings position the camera slightly above the scene, looking at the mound in the center of the crater.
 
 ```javascript
+// Position the camera slightly above and in front of the scene
 camera.position.set(0, -199, 75);
 camera.up = new THREE.Vector3(0,0,1);
+
+// Look at the center of the scene
 camera.lookAt(scene.position);
 ```
 
-Now let's create the renderer. We're going to be creating a [WebGL Renderer](http://threejs.org/docs/#Reference/Renderers/WebGLRenderer), which uses the WebGL API to render our graphics. It has way better performance than the [Canvas Renderer](http://threejs.org/docs/#Reference/Renderers/CanvasRenderer) and you'll want to use it whenever possible.
+Now let's create the renderer. We're going to be creating a [WebGL Renderer](http://threejs.org/docs/#Reference/Renderers/WebGLRenderer), which uses the WebGL API to render our graphics.
 
 ```javascript
+    // Think of the renderer as the engine that drives the scene
     var renderer = new THREE.WebGLRenderer({antialias: true});
+
+    // Set the pixel ratio of the screen (for high DPI screens)
     renderer.setPixelRatio(window.devicePixelRatio);
+
+    // Set the background of the scene to a orange/red
     renderer.setClearColor(0xffd4a6);
+
+    // Set renderer to the size of the window
     renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    // Append the renderer to the DOM
     container.appendChild( renderer.domElement );
 ```
 
@@ -91,12 +113,24 @@ $ gdal_translate -scale 600 1905 0 65535 -outsize 300 285 -ot UInt16 -of ENVI Ga
 Now, we get to create the planet surface from the DEM data. To do this, we set the URL of the data to load and initialize the loader. Let's also initialize a value for the surface.
 
 ```javascript
+// URL to our DEM resource
 var terrainURL = "data/Gale_HRSC_DEM_50m_300x285.bin";
+
+// Utility to load the DEM data
 var terrainLoader = new THREE.TerrainLoader();
+
+// We'll need this later
 var surface;
+
+// Create the plane geometry
+var geometry = new THREE.PlaneGeometry(WORLD_WIDTH, WORLD_HEIGHT, 299, 284);
 ```
 
-Then load in the data using the loader. In the callback, once the data file is loaded, we're first going to create a [plane](http://threejs.org/docs/#Reference/Extras.Geometries/PlaneGeometry). You'll see four arguments - these are the width and height of the "world" that we defined above, and the number of vertices the plane will have. We set these two values to 299 and 284 - the same dimensions as the DEM data, except that it's zero-indexed.
+In the line above, we also create a [PlaneGeometry(width, height, widthSegments, heightSegments)](http://threejs.org/docs/#Reference/Extras.Geometries/PlaneGeometry). You'll see four arguments - these are the width and height of the "world" that we defined above, and the number of vertices the plane will have. We set these two values to 299 and 284 - the same dimensions as the DEM data, except that it's zero-indexed.
+
+![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/plain-plane-2.png "Wireframe of the plane loaded into the scene. Each vertex will be adjusted to fit the corresponding height value in the digital elevation model.")
+
+Then load in the data using the loader.
 
 Then we'll do something crazy. Remember how the height data in the DEM file was stored as a series of numbers? We can use the TerrainLoader to iterate over those values, and adjust each corresponding vertex in the plane. Thus we morph a flat plane to take the shape of the terrain in the data. Because at the scale of the scene we're making, the final shape would be pretty boring at its natural values, we exaggerate the height, settling in at a factor that feels comfortable.
 
@@ -104,8 +138,6 @@ Then we'll do something crazy. Remember how the height data in the DEM file was 
 ```javascript
 // The terrainLoader loads the DEM file and defines a function to be called when the file is successfully downloaded.
 terrainLoader.load(terrainURL, function(data){
-    // Create the plane geometry
-    var geometry = new THREE.PlaneGeometry(WORLD_WIDTH, WORLD_HEIGHT, 299, 284);
 
     // Adjust each vertex in the plane to correspond to the height value in the DEM file.
     for (var i = 0, l = geometry.vertices.length; i < l; i++) {
@@ -120,6 +152,8 @@ terrainLoader.load(terrainURL, function(data){
 So now we have a geometry for our surface, but we can't actually load this into the scene yet. Objects in Three.js, called "meshes", require both a geometry and a material. That is, you need to define a shape, and you need to define what that shape is made out of. Yes, it's a box, but what kind of box, is it? Cardboard? Metal? Is it painted?
 
 Let's do this next.
+
+![](http://www.trbimg.com/img-562bfce4/turbine/la-gale-crater-texture-20151024/600 "Color image of the Gale Crater created by a combination of images from the Viking spacecraft and the Mars Reconnaissance Orbiter. (NASA)")
 
 Inside of the callback function, the line I said we'd be coming back to, we want to define a texture loader and set the URL, much in the way that we loaded the DEM data.
 
