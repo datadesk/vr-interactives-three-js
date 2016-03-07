@@ -65,20 +65,20 @@ camera.lookAt(scene.position);
 Now let's create the renderer. We're going to be creating a [WebGL Renderer](http://threejs.org/docs/#Reference/Renderers/WebGLRenderer), which uses the WebGL API to render our graphics.
 
 ```javascript
-    // Think of the renderer as the engine that drives the scene
-    var renderer = new THREE.WebGLRenderer({antialias: true});
+// Think of the renderer as the engine that drives the scene
+var renderer = new THREE.WebGLRenderer({antialias: true});
 
-    // Set the pixel ratio of the screen (for high DPI screens)
-    renderer.setPixelRatio(window.devicePixelRatio);
+// Set the pixel ratio of the screen (for high DPI screens)
+renderer.setPixelRatio(window.devicePixelRatio);
 
-    // Set the background of the scene to a orange/red
-    renderer.setClearColor(0xffd4a6);
+// Set the background of the scene to a orange/red
+renderer.setClearColor(0xffd4a6);
 
-    // Set renderer to the size of the window
-    renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+// Set renderer to the size of the window
+renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Append the renderer to the DOM
-    container.appendChild( renderer.domElement );
+// Append the renderer to the DOM
+container.appendChild( renderer.domElement );
 ```
 
 The "clear color" of the renderer is set to a dusty orange/red, and the size is set to the size of the window. As the last step, the renderer is appended to the DOM.
@@ -86,12 +86,12 @@ The "clear color" of the renderer is set to a dusty orange/red, and the size is 
 Now, we need to add a couple of helpers that allow VR-style stereo effects to our renderer, along with a manager to allow us to switch between VR and non-VR contexts.
 
 ```javascript
-    // Apply VR stereo rendering to renderer
-    var effect = new THREE.VREffect(renderer);
-    effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+// Apply VR stereo rendering to renderer
+var effect = new THREE.VREffect(renderer);
+effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Create a VR manager helper to enter and exit VR mode
-    var manager = new WebVRManager(renderer, effect);
+// Create a VR manager helper to enter and exit VR mode
+var manager = new WebVRManager(renderer, effect);
 ```
 
 ## Prepping the DEM data
@@ -162,6 +162,7 @@ Inside of the callback function, the line I said we'd be coming back to, we want
 Then we load the texture similar to how we did the DEM file. This time, we define and set the material in the callback function, using the texture we loaded as a texture map.
 
 ```javascript
+    // This goes inside the TerrainLoader callback function
     textureLoader.load(textureURL, function(texture) {
         var material = new THREE.MeshLambertMaterial({
             map: texture
@@ -181,6 +182,8 @@ Remember the geometry is the shape of an object, and the material is what that o
 You might notice we have both our geometry and material now, so it's time to add them to the scene, inside of the textureLoader callback.
 
 ```javascript
+        // This goes in the TextureLoader callback
+        // Create the surface mesh and add it to the scene
         surface = new THREE.Mesh(geometry, material);
         scene.add(surface);
 ```
@@ -191,11 +194,15 @@ So we have a scene, a camera and objects in that scene. Let's render it! We do t
 
 ```javascript
 // Render loop
+// This should go at the bottom of the script.
 function render() {
+
     // We'll add more up here later
 
-    // Render the scene through the manager.
+    // Call the render function again
     requestAnimationFrame( render );
+
+    // Update the scene through the manager.
     manager.render(scene, camera);
 }
 
@@ -215,20 +222,28 @@ dirLight.position.set( -1, 1, 1).normalize();
 
 var ambiLight = new THREE.AmbientLight(0x999999);
 
+// Add the lights to the scene
 scene.add(ambiLight);
 scene.add(dirLight);
 ```
 
 That's better, right?
 
-Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
+Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight(hexColor, intensity)](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight(hexColor)](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
 Standing still in a scene isn't very fun - we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters are specific to this type of controls,
 
 ```javascript
+// WASD-style movement controls
 var controls = new THREE.FlyControls(camera);
+
+// Disable automatic forward movement
 controls.autoForward = false;
+
+// Click and drag to look around with the mouse
 controls.dragToLook = true;
+
+// Movement and roll speeds, adjust these and see what happens!
 controls.movementSpeed = 20;
 controls.rollSpeed = Math.PI / 12;
 ```
@@ -238,10 +253,15 @@ Reload the page and... nothing happened! To actually move around in the scene, w
 ```javascript
     // Render loop
     function render() {
+
+        // Get the difference from when the clock was last updated and update the controls based on that value.
         var delta = clock.getDelta();
         controls.update(delta);
-        // Render the scene through the manager.
+
+        // Call the render function again
         requestAnimationFrame( render );
+
+        // Update the scene through the manager.
         manager.render(scene, camera);
     }
 ```
@@ -251,14 +271,23 @@ Now you can reload the scene by clicking and dragging with the mouse, or using t
 That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on.
 
 ```javascript
+// Detect mobile devices in the user agent
 var is_mobile= /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+// Conditionally load VR or Fly controls, based on whether we're on a mobile device
 if (is_mobile) {
     var controls = new THREE.VRControls(camera);
 } else {
+    // WASD-style movement controls
     var controls = new THREE.FlyControls(camera);
+
+    // Disable automatic forward movement
     controls.autoForward = false;
+
+    // Click and drag to look around with the mouse
     controls.dragToLook = true;
+
+    // Movement and roll speeds, adjust these and see what happens!
     controls.movementSpeed = 20;
     controls.rollSpeed = Math.PI / 12;
 }
