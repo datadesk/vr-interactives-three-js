@@ -10,25 +10,52 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <style>
-    *, *:before, *:after {
-      -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
-    }
     html, body { margin:0; padding:0; overflow:hidden;}
-
     </style>
 </head>
 <body>
-    <!-- Our scene will go here -->
-    <div id="webgl"></div>
+    <script>
+    WebVRConfig = {
+      /**
+       * webvr-polyfill configuration
+       */
+
+      // Forces availability of VR mode.
+      FORCE_ENABLE_VR: true, // Default: false.
+      // Complementary filter coefficient. 0 for accelerometer, 1 for gyro.
+      //K_FILTER: 0.98, // Default: 0.98.
+      // How far into the future to predict during fast motion.
+      //PREDICTION_TIME_S: 0.040, // Default: 0.040 (in seconds).
+      // Flag to disable touch panner. In case you have your own touch controls
+      //TOUCH_PANNER_DISABLED: true, // Default: false.
+      // Enable yaw panning only, disabling roll and pitch. This can be useful for
+      // panoramas with nothing interesting above or below.
+      //YAW_ONLY: true, // Default: false.
+
+      /**
+       * webvr-boilerplate configuration
+       */
+      // Forces distortion in VR mode.
+      //FORCE_DISTORTION: true, // Default: false.
+      // Override the distortion background color.
+      // DISTORTION_BGCOLOR: {x: 1, y: 0, z: 0, w: 1}, // Default: (0,0,0,1).
+      // Prevent distortion from happening.
+      //PREVENT_DISTORTION: true, // Default: false.
+      // Show eye centers for debugging.
+      // SHOW_EYE_CENTERS: true, // Default: false.
+      // Prevent the online DPDB from being fetched.
+      // NO_DPDB_FETCH: true,  // Default: false.
+    };
+    </script>
 
     <!-- Assets we'll need - Three.js, controls, and the webVR manager and polyfill -->
     <script src="js/three-r73.js"></script>
     <script src="js/three.flycontrols.js"></script>
     <script src="js/three.terrainloader.js"></script>
-    <script src="js/webvr-manager.js"></script>
-    <script src="js/webvr-polyfill.js"></script>
     <script src="js/VRControls.js"></script>
     <script src="js/VREffect.js"></script>
+    <script src="js/webvr-polyfill.js"></script>
+    <script src="js/webvr-manager.js"></script>
 
     <script>
     // Width and height of the browser window
@@ -38,9 +65,6 @@
     // Width and height of the surface we're going to create
     var WORLD_WIDTH = 2000;
     var WORLD_HEIGHT = 1900;
-
-    // Where the scene will go
-    var container = document.getElementById("webgl");
 
     // Where our lights and cameras will go
     var scene = new THREE.Scene();
@@ -71,14 +95,18 @@
     renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Append the renderer to the DOM
-    container.appendChild( renderer.domElement );
+    document.body.appendChild( renderer.domElement );
 
     // Apply VR stereo rendering to renderer
     var effect = new THREE.VREffect(renderer);
     effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Create a VR manager helper to enter and exit VR mode
-    var manager = new WebVRManager(renderer, effect);
+    var params = {
+      hideButton: false, // Default: false.
+      isUndistorted: false // Default: false.
+    };
+    var manager = new WebVRManager(renderer, effect, params);
 
     // URL to our DEM resource
     var terrainURL = "data/Gale_HRSC_DEM_50m_300x285.bin";
@@ -149,20 +177,22 @@
 
     // Render loop
     // This should go at the bottom of the script.
-    function render() {
+    function render(timestamp) {
+        console.log("render");
 
         // Get the difference from when the clock was last updated and update the controls based on that value.
         var delta = clock.getDelta();
         controls.update(delta);
 
+        // Update the scene through the manager.
+        manager.render(scene, camera, timestamp);
+
         // Call the render function again
         requestAnimationFrame( render );
 
-        // Update the scene through the manager.
-        manager.render(scene, camera);
     }
 
-    render();
+    render(Date.now());
 
     </script>
 

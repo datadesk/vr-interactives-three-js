@@ -36,9 +36,6 @@ var WORLD_HEIGHT = 1900;
 Then, we're ready to create the scene and place the camera:
 
 ```javascript
-// Where the scene will go
-var container = document.getElementById("webgl");
-
 // Where our lights and cameras will go
 var scene = new THREE.Scene();
 
@@ -78,7 +75,7 @@ renderer.setClearColor(0xffd4a6);
 renderer.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 // Append the renderer to the DOM
-container.appendChild( renderer.domElement );
+document.body.appendChild( renderer.domElement );
 ```
 
 The "clear color" of the renderer is set to a dusty orange/red, and the size is set to the size of the window. As the last step, the renderer is appended to the DOM.
