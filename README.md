@@ -8,6 +8,14 @@ We'll make use of the [WebVR Boilerplate](https://github.com/borismus/webvr-boil
 
 We'll also use a [terrain loader](http://blog.thematicmapping.org/2013/10/terrain-building-with-threejs.html), developed by [Bjørn Sandvik](http://blog.thematicmapping.org/).
 
+## Preamble
+Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and enter the following at the prompt.
+
+```bash
+$ python -m SimpleHTTPServer
+```
+![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/runserver.gif)
+
 ## Let's get started
 Using Three.js can be compared a bit to filmmaking: you have a scene, lighting and a camera. The scene updates a certain number of times per second, otherwise known as "frames per second" (which we'll try to keep as close to 60 as we can, but will drop based on your computer and the complexity of the scene.)
 
@@ -33,7 +41,7 @@ var container = document.getElementById("webgl"),
 
 The [Perspective Camera](http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera) functions similar to a standard photo or video camera you might be familiar with. The first parameter, `75` is the field of view, followed by the aspect ratio (in this case the width and height of the window), along with the minimum and maximum ranges the camera can "see." Anything outside these ranges will not be rendered in the scene.
 
-We also want to position the camera, and tell it where to look. These settings position the camera slightly above the scene, looking at the mound in the center of the crater. 
+We also want to position the camera, and tell it where to look. These settings position the camera slightly above the scene, looking at the mound in the center of the crater.
 
 ```javascript
 camera.position.set(0, -199, 75);
@@ -182,7 +190,7 @@ That's better, right?
 
 Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
-Standing still in a scene isn't very fun - we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters are specific to this type of controls, 
+Standing still in a scene isn't very fun - we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters are specific to this type of controls,
 
 ```javascript
 var controls = new THREE.FlyControls(camera);
@@ -192,7 +200,7 @@ controls.movementSpeed = 20;
 controls.rollSpeed = Math.PI / 12;
 ```
 
-Reload the page and... nothing happened! To actually move around in the scene, we also need to add the controls to the renderer loop. 
+Reload the page and... nothing happened! To actually move around in the scene, we also need to add the controls to the renderer loop.
 
 ```javascript
     // Render loop
@@ -205,11 +213,11 @@ Reload the page and... nothing happened! To actually move around in the scene, w
     }
 ```
 
-Now you can reload the scene by clicking and dragging with the mouse, or using the WASD keys to move around. 
+Now you can reload the scene by clicking and dragging with the mouse, or using the WASD keys to move around.
 
-That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on. 
+That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on.
 
-```javascript 
+```javascript
 var is_mobile= /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 if (is_mobile) {
