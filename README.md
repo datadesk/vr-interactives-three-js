@@ -130,10 +130,7 @@ In the line above, we also create a [PlaneGeometry(width, height, widthSegments,
 
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/plain-plane-2.png "Wireframe of the plane loaded into the scene. Each vertex will be adjusted to fit the corresponding height value in the digital elevation model.")
 
-Then load in the data using the loader.
-
 Then we'll do something crazy. Remember how the height data in the DEM file was stored as a series of numbers? We can use the TerrainLoader to iterate over those values, and adjust each corresponding vertex in the plane. Thus we morph a flat plane to take the shape of the terrain in the data. Because at the scale of the scene we're making, the final shape would be pretty boring at its natural values, we exaggerate the height, settling in at a factor that feels comfortable.
-
 
 ```javascript
 // The terrainLoader loads the DEM file and defines a function to be called when the file is successfully downloaded.
@@ -149,11 +146,11 @@ terrainLoader.load(terrainURL, function(data){
 });
 ```
 
+![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/surface-wireframe.png?raw=true "Here's what the surface looks like after transforming the height to match the DEM data.")
+
 So now we have a geometry for our surface, but we can't actually load this into the scene yet. Objects in Three.js, called "meshes", require both a geometry and a material. That is, you need to define a shape, and you need to define what that shape is made out of. Yes, it's a box, but what kind of box, is it? Cardboard? Metal? Is it painted?
 
 Let's do this next.
-
-![](http://www.trbimg.com/img-562bfce4/turbine/la-gale-crater-texture-20151024/600 "Color image of the Gale Crater created by a combination of images from the Viking spacecraft and the Mars Reconnaissance Orbiter. (NASA)")
 
 Inside of the callback function, the line I said we'd be coming back to, we want to define a texture loader and set the URL, much in the way that we loaded the DEM data.
 
@@ -178,6 +175,8 @@ Then we load the texture similar to how we did the DEM file. This time, we defin
 That's fine and all, but what the heck is a texturemap? Why are we doing all this?
 
 Remember the geometry is the shape of an object, and the material is what that object is made out of? Well think of a texture map as a paint job, or "skin" on an object. It's basically an image mapped onto an object's surface.
+
+![](http://www.trbimg.com/img-562bfce4/turbine/la-gale-crater-texture-20151024/600 "Color image of the Gale Crater created by a combination of images from the Viking spacecraft and the Mars Reconnaissance Orbiter. (NASA)")
 
 You might notice we have both our geometry and material now, so it's time to add them to the scene, inside of the textureLoader callback.
 
@@ -205,7 +204,7 @@ render();
 
 Now load the scene. There will be a wait while the resources load and process, but eventually you'll see this lovely scene.
 
-![Our scene](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/oops.png?raw=true)
+![Our scene](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/oops.png?raw=true "Lambert materials won't show up in a scene without lights.")
 
 What happened? We forgot to turn on the lights! Let's do that.
 
