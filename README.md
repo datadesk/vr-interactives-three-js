@@ -298,11 +298,13 @@ One great thing about the VR manager is it provides an interface to allow users 
 
 At the very top of the page you'll see a line ([line 20, in fact.](https://github.com/datadesk/vr-interactives-three-js/blob/master/three-demo.html#L20)) that says `FORCE_ENABLE_VR: false`. Change this option to `true`.
 
+![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/cardboard-icon.png?raw=true "VR mode toggle icon.")
+
 Now, if you reload the page, you'll see a small cardboard icon in the lower right-hand side of the page. Click this, and you'll see the page distort as if you were viewing the page through a cardboard.
 
-![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/vr-mode.png?raw=true "Viewing the scene distorted through VR mode.")
-
 Voila!
+
+![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/vr-mode.png?raw=true "Viewing the scene distorted through VR mode.")
 
 
 ## Other Things you may want to do
