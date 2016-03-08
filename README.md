@@ -288,8 +288,21 @@ if (is_mobile) {
     controls.movementSpeed = 20;
     controls.rollSpeed = Math.PI / 12;
 }
-
 ```
+
+Now, if you visit this page on a mobile phone, you'll be able to look around the scene just by moving your device.
+
+## VR Mode
+
+One great thing about the VR manager is it provides an interface to allow users to easily switch in and out of VR mode, so that you can use a cardboard or other VR device. This ability is automatically loaded based on the device that you're viewing the page on, so it'll show up on phones, but not your desktops. We can override this though.
+
+At the very top of the page you'll see a line ([line 20, in fact.](https://github.com/datadesk/vr-interactives-three-js/blob/master/three-demo.html#L20)) that says `FORCE_ENABLE_VR: false`. Change this option to `true`.
+
+Now, if you reload the page, you'll see a small cardboard icon in the lower right-hand side of the page. Click this, and you'll see the page distort as if you were viewing the page through a cardboard.
+
+
+Voila!
+
 
 ## Other Things you may want to do
 - Load in different surface detail and texture sizes based on the device.

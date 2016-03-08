@@ -14,9 +14,12 @@
     </style>
 </head>
 <body>
-    <!-- Our scene will go here -->
-    <div id="webgl"></div>
-
+    <script>
+    WebVRConfig = {
+      // Forces availability of VR mode.
+      FORCE_ENABLE_VR: false,
+    };
+    </script>
     <!-- Assets we'll need - Three.js, controls, and the webVR manager and polyfill -->
     <script src="js/es6-promise.min.js"></script>
     <script src="js/three.min.js"></script>

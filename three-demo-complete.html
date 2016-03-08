@@ -14,6 +14,12 @@
     </style>
 </head>
 <body>
+    <script>
+    WebVRConfig = {
+      // Forces availability of VR mode.
+      FORCE_ENABLE_VR: true,
+    };
+    </script>
     <!-- Assets we'll need - Three.js, controls, and the webVR manager and polyfill -->
     <script src="js/es6-promise.min.js"></script>
     <script src="js/three.min.js"></script>
@@ -68,12 +74,7 @@
     var effect = new THREE.VREffect(renderer);
     effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Create a VR manager helper to enter and exit VR mode
-    var params = {
-      hideButton: false, // Default: false.
-      isUndistorted: false // Default: false.
-    };
-    var manager = new WebVRManager(renderer, effect, params);
+    var manager = new WebVRManager(renderer, effect);
 
     // URL to our DEM resource
     var terrainURL = "data/Gale_HRSC_DEM_50m_300x285.bin";
@@ -144,22 +145,21 @@
 
     // Render loop
     // This should go at the bottom of the script.
-    function render(timestamp) {
-        console.log("render");
+    function render() {
 
         // Get the difference from when the clock was last updated and update the controls based on that value.
         var delta = clock.getDelta();
         controls.update(delta);
 
         // Update the scene through the manager.
-        manager.render(scene, camera, timestamp);
+        manager.render(scene, camera);
 
         // Call the render function again
         requestAnimationFrame( render );
 
     }
 
-    render(Date.now());
+    render();
 
     </script>
 
