@@ -16,6 +16,8 @@ $ python -m SimpleHTTPServer
 ```
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/runserver.gif)
 
+Now you'll be able to go to [http://localhost:8000](http://localhost:8000) and navigate to the page we're going to develop. 
+
 ## Let's get started
 Using Three.js can be compared a bit to filmmaking: you have a scene, lighting and a camera. The scene updates a certain number of times per second, otherwise known as "frames per second" (which we'll try to keep as close to 60 as we can, but will drop based on your computer and the complexity of the scene.)
 
