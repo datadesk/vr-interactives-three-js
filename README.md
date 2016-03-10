@@ -12,11 +12,12 @@ We'll also use a [terrain loader](http://blog.thematicmapping.org/2013/10/terrai
 Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and enter the following at the prompt.
 
 ```bash
+$ cd /data/vr_interactives
 $ python -m SimpleHTTPServer
 ```
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/runserver.gif)
 
-Now you'll be able to go to [http://localhost:8000](http://localhost:8000) and navigate to the page we're going to develop. 
+Now you'll be able to go to [http://localhost:8000/three-demo.html](http://localhost:8000/three-demo.html) and navigate to the page we're going to develop. 
 
 ## Let's get started
 Using Three.js can be compared a bit to filmmaking: you have a scene, lighting and a camera. The scene updates a certain number of times per second, otherwise known as "frames per second" (which we'll try to keep as close to 60 as we can, but will drop based on your computer and the complexity of the scene.)
