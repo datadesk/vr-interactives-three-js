@@ -9,7 +9,7 @@ We'll make use of the [WebVR Boilerplate](https://github.com/borismus/webvr-boil
 We'll also use a [terrain loader](http://blog.thematicmapping.org/2013/10/terrain-building-with-threejs.html), developed by [Bjørn Sandvik](http://blog.thematicmapping.org/).
 
 ## Preamble
-Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and enter the following at the prompt.
+Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and navigate to the directory we'll be using (on the lab computers. If you're on your own rig, navigate to where you've stored the files) and enter the following at the prompt.
 
 ```bash
 $ cd /data/vr_interactives
