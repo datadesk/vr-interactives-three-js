@@ -3,7 +3,7 @@ There are a lot of Three.js [examples](http://threejs.org/examples/) and [tutori
 
 In this session you'll learn how we used NASA satellite imagery and elevation data to create a 3-D rendering of the [Gale Crater](http://graphics.latimes.com/mars-gale-crater-vr/) on Mars.
 
-## Requirements
+## Requirements and credits
 We'll make use of the [WebVR Boilerplate](https://github.com/borismus/webvr-boilerplate), which also uses the [WebVR polyfill](https://github.com/borismus/webvr-polyfill) to provide VR support when the WebVR spec isn't implemented.
 
 We'll also use a [terrain loader](http://blog.thematicmapping.org/2013/10/terrain-building-with-threejs.html), developed by [Bjørn Sandvik](http://blog.thematicmapping.org/).
@@ -102,7 +102,7 @@ The DEM data came as a GeoTIFF file (Gale_HRSC_DEM_50m_overlap.tif). Unfortunate
 
 We can, however, convert it to a format called ENVI, which can store our height values as 16-bit unsigned integers, offering 65,535 height values for each pixel in the heightmap.
 
-We're not going to do this today, but we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers.
+We're not going to do this today, but for the project we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers.
 
 ```bash
 $ gdal_translate -scale 600 1905 0 65535 -outsize 300 285 -ot UInt16 -of ENVI Gale_HRSC_DEM_50m.tif Gale_HRSC_DEM_50m.bin
@@ -228,9 +228,9 @@ scene.add(dirLight);
 
 That's better, right?
 
-Just like a film scene, Three.js scenes need lighting. You can think of [DirectionalLight(hexColor, intensity)](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight(hexColor)](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
+Just like a film scene, Three.js scenes need lighting. You can think of a [DirectionalLight(hexColor, intensity)](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight(hexColor)](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
-Standing still in a scene isn't very fun - we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters are specific to this type of controls,
+Standing still in a scene isn't very fun, we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters we use below are specific to the FlyControls we'll be using.
 
 ```javascript
 // WASD-style movement controls
@@ -247,7 +247,7 @@ controls.movementSpeed = 20;
 controls.rollSpeed = Math.PI / 12;
 ```
 
-Reload the page and... nothing happened! To actually move around in the scene, we also need to add the controls to the renderer loop.
+Reload the page and... nothing happened! To actually move around in the scene, we also need to add and update the controls in the renderer loop.
 
 ```javascript
     // Render loop
@@ -265,9 +265,9 @@ Reload the page and... nothing happened! To actually move around in the scene, w
     }
 ```
 
-Now you can reload the scene by clicking and dragging with the mouse, or using the WASD keys to move around.
+Now when you reload the scene you can look around by clicking and dragging with the mouse, and use the WASD keys to move around the crater.
 
-That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on.
+That's great and all but what if we want to try this on mobile? Instead, let's load controls conditionally, depending on the device we're on. This will load the VRControls if you load the page on your phone, which use the accelerometer to track movement.  
 
 ```javascript
 // Detect mobile devices in the user agent
@@ -312,3 +312,5 @@ Voila!
 ## Other Things you may want to do
 - Load in different surface detail and texture sizes based on the device.
 - Add in collision detection
+- Call out specific points in the crater
+- Progressively load terrain and texture
