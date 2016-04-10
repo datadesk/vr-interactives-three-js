@@ -9,15 +9,17 @@ We'll make use of the [WebVR Boilerplate](https://github.com/borismus/webvr-boil
 We'll also use a [terrain loader](http://blog.thematicmapping.org/2013/10/terrain-building-with-threejs.html), developed by [Bjørn Sandvik](http://blog.thematicmapping.org/).
 
 ## Preamble
-Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and navigate to the directory we'll be using (on the lab computers. If you're on your own rig, navigate to where you've stored the files) and enter the following at the prompt.
+Before we start, we'll want to start up a small webserver that can serve our page and assets. Open the terminal on your computers and navigate to the directory we'll be using (on the lab computers. If you're on your own rig, [download a copy of this repository](https://github.com/datadesk/vr-interactives-three-js/archive/master.zip)) and enter the following at the prompt.
 
 ```bash
-$ cd /data/vr_interactives
+$ cd /data/vr_interactives # or wherever you've downloaded this to
 $ python -m SimpleHTTPServer
 ```
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/runserver.gif)
 
-Now you'll be able to go to [http://localhost:8000/three-demo.html](http://localhost:8000/three-demo.html) and navigate to the page we're going to develop. 
+*Note: If you're using Python 3, you may have to run [http.server](http://angusjune.github.io/blog/2014/08/16/python-3-dot-x-no-module-named-simplehttpserver/) instead.*
+
+Now you'll be able to go to [http://localhost:8000/three-demo.html](http://localhost:8000/three-demo.html) and navigate to the page we're going to develop. That page will be blank for now.
 
 ## Let's get started
 Using Three.js can be compared a bit to filmmaking: you have a scene, lighting and a camera. The scene updates a certain number of times per second, otherwise known as "frames per second" (which we'll try to keep as close to 60 as we can, but will drop based on your computer and the complexity of the scene.)
@@ -103,11 +105,13 @@ The DEM data came as a GeoTIFF file (Gale_HRSC_DEM_50m_overlap.tif). Unfortunate
 
 We can, however, convert it to a format called ENVI, which can store our height values as 16-bit unsigned integers, offering 65,535 height values for each pixel in the heightmap.
 
-We're not going to do this today, but for the project we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers.
+**We're not going to do this today**, but for the project we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers.
 
 ```bash
 $ gdal_translate -scale 600 1905 0 65535 -outsize 300 285 -ot UInt16 -of ENVI Gale_HRSC_DEM_50m.tif Gale_HRSC_DEM_50m.bin
 ```
+
+You can see the files mentioned above in the 'data' folder.
 
 ## The fun part: Creating the planet
 Now, we get to create the planet surface from the DEM data. To do this, we set the URL of the data to load and initialize the loader. Let's also initialize a value for the surface.
@@ -128,6 +132,8 @@ var geometry = new THREE.PlaneGeometry(WORLD_WIDTH, WORLD_HEIGHT, 299, 284);
 
 In the line above, we also create a [PlaneGeometry(width, height, widthSegments, heightSegments)](http://threejs.org/docs/#Reference/Extras.Geometries/PlaneGeometry). You'll see four arguments - these are the width and height of the "world" that we defined above, and the number of vertices the plane will have. We set these two values to 299 and 284 - the same dimensions as the DEM data, except that it's zero-indexed.
 
+By the way, you won't see anything on the screen until we start actually rendering the scene. The screenshots in this tutorial are how it would look *if* it was rendering -- which we'll get to soon.
+
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/plain-plane-2.png "Wireframe of the plane loaded into the scene. Each vertex will be adjusted to fit the corresponding height value in the digital elevation model.")
 
 Then we'll do something crazy. Remember how the height data in the DEM file was stored as a series of numbers? We can use the TerrainLoader to iterate over those values, and adjust each corresponding vertex in the plane. Thus we morph a flat plane to take the shape of the terrain in the data. Because at the scale of the scene we're making, the final shape would be pretty boring at its natural values, we exaggerate the height, settling in at a factor that feels comfortable.
@@ -145,6 +151,8 @@ terrainLoader.load(terrainURL, function(data){
 
 });
 ```
+
+
 
 ![](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/surface-wireframe.png?raw=true "Here's what the surface looks like after transforming the height to match the DEM data.")
 
@@ -179,7 +187,7 @@ Remember the geometry is the shape of an object, and the material is what that o
 
 ![](http://www.trbimg.com/img-562bfce4/turbine/la-gale-crater-texture-20151024/600 "Color image of the Gale Crater created by a combination of images from the Viking spacecraft and the Mars Reconnaissance Orbiter. (NASA)")
 
-You might notice we have both our geometry and material now, so it's time to add them to the scene, inside of the textureLoader callback.
+You might notice we have both our geometry and material now, so it's time to add them to the scene, **inside of the textureLoader callback** (so, before the "Leave this space blank" comment).
 
 ```javascript
         // This goes in the TextureLoader callback
@@ -231,7 +239,7 @@ That's better, right?
 
 Just like a film scene, Three.js scenes need lighting. You can think of a [DirectionalLight(hexColor, intensity)](http://threejs.org/docs/#Reference/Lights/DirectionalLight) as a spotlight that you can specify the direction of and where it's pointing, while [AmbientLight(hexColor)](http://threejs.org/docs/#Reference/Lights/AmbientLight) is more like the sun - it lights all objects in the scene, regardless of where they're positioned.
 
-Standing still in a scene isn't very fun, we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters we use below are specific to the FlyControls we'll be using.
+Standing still in a scene isn't very fun, we can't even look around. To interact with a scene, we'll need to add controls. Controls basically move the camera around the scene according to user inputs. The different parameters we use below are specific to the FlyControls we'll be using. **Make sure to put this code before the `render()` loop:**
 
 ```javascript
 // WASD-style movement controls
@@ -248,7 +256,7 @@ controls.movementSpeed = 20;
 controls.rollSpeed = Math.PI / 12;
 ```
 
-Reload the page and... nothing happened! To actually move around in the scene, we also need to add and update the controls in the renderer loop.
+Reload the page and... nothing happened! To actually move around in the scene, we also need to add and update the controls in the renderer loop. Find the `render()` function from earlier and replace the code inside it like so:
 
 ```javascript
     // Render loop
