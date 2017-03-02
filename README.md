@@ -97,6 +97,28 @@ effect.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 var manager = new WebVRManager(renderer, effect);
 ```
 
+If you try to load the scene now, you're just going to see a blank screen. That's because while we're initializing the scene, we're not actually rendering it. To do that, we need to write what's called a render loop. 
+
+```javascript
+// Render loop
+// This should go at the bottom of the script.
+function render() {
+
+    // We'll add more up here later
+
+    // Call the render function again
+    requestAnimationFrame( render );
+
+    // Update the scene through the manager.
+    manager.render(scene, camera);
+}
+
+render();
+```
+
+Now, if you load the scene, you should see an orange/red window. There's nothing there, but we'll get to that in a bit. 
+
+
 ## Prepping the DEM data
 ![Digital elevation model of Gale Crater. Brighter values are higher elevations. (NASA)](http://www.trbimg.com/img-562bfe79/turbine/la-mars-dem-map-20151024/600 "Digital elevation model of Gale Crater. Brighter values are higher elevations. (NASA)")
 
@@ -199,26 +221,7 @@ You might notice we have both our geometry and material now, so it's time to add
 
 It's important to place these in the callbacks, otherwise you might be trying to load a texture onto a shape that hasn't loaded yet, or vice versa.
 
-So we have a scene, a camera and objects in that scene. Let's render it! We do this by creating a rendering loop. Right now, since we don't have controls defined yet, this is very simple.
-
-```javascript
-// Render loop
-// This should go at the bottom of the script.
-function render() {
-
-    // We'll add more up here later
-
-    // Call the render function again
-    requestAnimationFrame( render );
-
-    // Update the scene through the manager.
-    manager.render(scene, camera);
-}
-
-render();
-```
-
-Now load the scene. There will be a wait while the resources load and process, but eventually you'll see this lovely scene.
+Now, let's take a look at the scene. There will be a wait while the resources load and process, but eventually you'll see this lovely scene.
 
 ![Our scene](https://github.com/datadesk/vr-interactives-three-js/blob/master/img/oops.png?raw=true "Lambert materials won't show up in a scene without lights.")
 
