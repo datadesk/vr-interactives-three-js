@@ -197,6 +197,7 @@ Then we load the texture similar to how we did the DEM file. This time, we defin
 ```javascript
     // This goes inside the TerrainLoader callback function
     textureLoader.load(textureURL, function(texture) {
+        // Lambert is a type non-reflective material
         var material = new THREE.MeshLambertMaterial({
             map: texture
         });
