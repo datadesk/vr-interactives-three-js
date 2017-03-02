@@ -126,13 +126,15 @@ A digital elevation model is a 3D representation of a terrain's surface, and in 
 
 The DEM data came as a GeoTIFF file (Gale_HRSC_DEM_50m_overlap.tif). Unfortunately, the TIFF file is huge (30 MB!), and TIFF isn't supported for display by most browsers anyway. We could use the incredibly useful [GDAL](http://www.gdal.org/) to convert it to a PNG image, where the height values are reduced to only 256 shades of grey. This would make our terrain blocky, however.
 
-We can, however, convert it to a format called ENVI, which can store our height values as 16-bit unsigned integers, offering 65,535 height values for each pixel in the heightmap.
+We can, however, convert it to a format called ENVI, which stores our height values as 16-bit unsigned integers, offering 65,535 height values for each pixel in the heightmap.
 
-**We're not going to do this today**, but for the project we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers.
+**We're not going to do this today**, but for the project we converted the heightmap into a 300x285 ENVI file using the following command. Just remember that we've stored the color values in the heightmap as numbers. 
 
 ```bash
 $ gdal_translate -scale 600 1905 0 65535 -outsize 300 285 -ot UInt16 -of ENVI Gale_HRSC_DEM_50m.tif Gale_HRSC_DEM_50m.bin
 ```
+
+If you'd like to read more about how to do this, Bjorn Sandvik has an [excellent explainer](http://blog.mastermaps.com/2013/10/terrain-building-with-threejs-part-1.html). 
 
 You can see the files mentioned above in the 'data' folder.
 
