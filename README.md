@@ -209,11 +209,11 @@ Then we load the texture similar to how we did the DEM file. This time, we defin
 
 That's fine and all, but what the heck is a texturemap? Why are we doing all this?
 
-Remember the geometry is the shape of an object, and the material is what that object is made out of? Well think of a texture map as a paint job, or "skin" on an object. It's basically an image mapped onto an object's surface.
+Remember the geometry is the shape of an object, and the material is what that object is made out of. Think of a texture map as a paint job, or "skin" on an object. It's basically an image mapped onto an object's surface.
 
 ![](http://www.trbimg.com/img-562bfce4/turbine/la-gale-crater-texture-20151024/600 "Color image of the Gale Crater created by a combination of images from the Viking spacecraft and the Mars Reconnaissance Orbiter. (NASA)")
 
-You might notice we have both our geometry and material now, so it's time to add them to the scene, **inside of the textureLoader callback** (so, before the "Leave this space blank" comment).
+You might notice we have both our geometry and material now, so it's time to add them to the scene, **inside of the textureLoader callback** (so, where the "Leave this space blank" comment is).
 
 ```javascript
         // This goes in the TextureLoader callback
