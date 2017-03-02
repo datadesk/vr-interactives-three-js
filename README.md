@@ -26,7 +26,7 @@ Using Three.js can be compared a bit to filmmaking: you have a scene, lighting a
 
 We'll build this in the file [three-demo.html](three-demo.html). Go ahead and open this file in a text editor.
 
-In the empty script tag on line 27, let's start by declaring some constants. We'll use this to set the size of the renderer on the screen, and the "size" of our world.
+In the empty script tag on line 33, let's start by declaring some constants. We'll use this to set the size of the renderer on the screen, and the "size" of our world.
 
 ```javascript
 // Width and height of the browser window
