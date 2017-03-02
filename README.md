@@ -334,5 +334,5 @@ Voila!
 
 ## So what can you do with this?
 A couple people have taken the techniques outlined here and integrated them into story pages
-- Yaryna Serkez created a [3D map of the Carpathian Mountains](http://texty.org.ua/d/carpathians-3d/).
+- [Yaryna Serkez](https://twitter.com/iarynam) created a [3D map of the Carpathian Mountains](http://texty.org.ua/d/carpathians-3d/).
 - This isn't a three.js project, but Joe Fox used the same terrain extrusion techniques to create a map of a [mountain lion's movements in Griffith Park](http://www.latimes.com/projects/la-me-griffith-park-mountain-lion/).
