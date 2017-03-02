@@ -71,6 +71,7 @@ Now let's create the renderer. We're going to be creating a [WebGL Renderer](htt
 var renderer = new THREE.WebGLRenderer({antialias: true});
 
 // Set the pixel ratio of the screen (for high DPI screens)
+// This line is actually really important. Otherwise you'll have lots of weird bugs and a generally bad time.
 renderer.setPixelRatio(window.devicePixelRatio);
 
 // Set the background of the scene to a orange/red
